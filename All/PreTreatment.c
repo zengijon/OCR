@@ -5,9 +5,6 @@
 #include "utility_SDL.h"
 #include <math.h>
 
-
-int h;
-int w;
 float nb_pixels;
 int histo[256];
 

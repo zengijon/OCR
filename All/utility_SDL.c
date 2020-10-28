@@ -1,6 +1,8 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL.h>
 
+int h;
+int w;
 Uint32 getpixel(SDL_Surface *surface, int x, int y)
 {
     int bpp = surface->format->BytesPerPixel;
@@ -81,9 +83,10 @@ void putpixel(SDL_Surface *surface, int x, int y, Uint32 pixel)
     }
 }
 
-void display_Array(int h,int w,Uint8 binaryArray[h][w], SDL_Surface* image)
+void display_Array(int a,int b,Uint8 binaryArray[h][w], SDL_Surface* image)
 {
-
+  h = a;
+  w = b;
   Uint32 pix;
   for(int i = 0; i < h; i++)
     {

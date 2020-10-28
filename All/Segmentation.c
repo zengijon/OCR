@@ -5,9 +5,6 @@
 #include "stdbool.h"
 //#include <neuralnetwork.h>
 
-
-int h;
-int w;
 SDL_Surface * image;
 
 void CheckLine(Uint8 binaryArray[h][w])
@@ -40,7 +37,6 @@ void CheckColumn(Uint8 binaryArray[h][w])
 {
   int isColumn = true;
   int mem = 0;
-  int test = 0;
   for (int i = 0; i < h; ++i)
     {
     mem = i;
