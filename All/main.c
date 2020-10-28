@@ -30,7 +30,7 @@ SDL_Surface* load_image(char *path)
 
 int main(int argc, char *argv[])
 {
-  if (argc != 2)
+  if (argc < 2)
     {
       errx(2, "Missing argument");
     }
@@ -45,8 +45,19 @@ int main(int argc, char *argv[])
   int h = image ->h;
   int w = image -> w;
   Uint8 binaryArray[h][w];
-  AllTreatment(h,w,binaryArray,image);
-  InitFile(h,w,binaryArray, image);
+  if(argc == 2 || strcmp(argv[2],"s") == 0 || strcmp(argv[2],"segmentation") == 0)
+    {
+      AllTreatment(h, w, binaryArray,image, "");
+      InitFile(h,w,binaryArray, image);
+    }
+  else
+    {
+      if (strcmp(argv[2],"b") == 0|| strcmp(argv[2],"binarize") == 0||
+	  strcmp(argv[2],"g") == 0|| strcmp(argv[2],"grayscale") == 0)
+	AllTreatment(h, w, binaryArray,image, argv[2]);
+      else
+	errx(3, "Argument : %s doesn't exist", argv[2]);
+    }
   display_Array(h,w,binaryArray, image);
   
   

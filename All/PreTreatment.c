@@ -59,7 +59,7 @@ int max_s()
 /*=========================================================
   =========================================================*/
 
-void GreyScaleArray (SDL_Surface* image, Uint8 binaryArray[h][w])
+void GreyScaleArray (int h, int w, SDL_Surface* image, Uint8 binaryArray[h][w])
 {
   Uint8 r = 0;
   Uint8 g = 0;
@@ -84,7 +84,7 @@ void GreyScaleArray (SDL_Surface* image, Uint8 binaryArray[h][w])
     }
 }
 
-void Convolution(int matrix[3][3],Uint8 binaryArray[h][w]/*,int n=0*/)
+void Convolution(int h, int w, int matrix[3][3],Uint8 binaryArray[h][w])
 {
   Uint8 mem_tampon[h][w];
   int tally;
@@ -116,7 +116,7 @@ void Convolution(int matrix[3][3],Uint8 binaryArray[h][w]/*,int n=0*/)
     }
 
 //Binarisation de l'image grace au seuil
-void Binarize(Uint8 binaryArray[h][w])
+void Binarize(int h, int w, Uint8 binaryArray[h][w])
 {
   int seuil = max_s();
   for(int i = 0; i < h; i++)
@@ -132,22 +132,10 @@ void Binarize(Uint8 binaryArray[h][w])
 }
 
 //Fonction principale du fichier rassemblant toutes les fonctions précédante
-void AllTreatment(int a, int b, Uint8 binaryArray[a][b],SDL_Surface* image)
+void AllTreatment(int h, int w, Uint8 binaryArray[h][w],SDL_Surface* image, char* t)
 {
-  h = a;
-  w = b;
-  nb_pixels = a*b;
-    
-  GreyScaleArray(image, binaryArray);
-  //Convolution(median, binaryArray);
-  Binarize(binaryArray);
-  //display_Array(h,w,binaryArray,image);
-  //getchar();
-  //Convolution(blur, binaryArray);
-  //Convolution(median, binaryArray);
-  // Binarize(binaryArray);
-   Convolution(smouth, binaryArray);
-  //Binarize(binaryArray);
-
-
+  nb_pixels = h*w; 
+  GreyScaleArray(h, w, image, binaryArray);
+  if (strcmp(t, "b") == 0 || strcmp(t, "binarize") == 0 || strcmp(t, "") == 0)
+  	Binarize(h, w, binaryArray);
 }
