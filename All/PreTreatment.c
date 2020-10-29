@@ -59,6 +59,11 @@ int max_s()
 /*=========================================================
   =========================================================*/
 
+/*
+- Transforme l'image en niveau de gris et la met dans une matrice
+- Enregistre la matrice dans binaryArray
+- Crée l'histogramme des valeurs des pixels en Grayscale
+*/
 void GreyScaleArray (int h, int w, SDL_Surface* image, Uint8 binaryArray[h][w])
 {
   Uint8 r = 0;
@@ -75,8 +80,9 @@ void GreyScaleArray (int h, int w, SDL_Surface* image, Uint8 binaryArray[h][w])
     {
       for (int j = 0;  j < w; j++)
 	{
-	  ip =getpixel(image, j, i);
+	  ip = getpixel(image, j, i);
 	  SDL_GetRGBA(ip,image->format, &r,&g,&b,&a);
+	  //Formule pour obtenir le niveau de gris à partir des couleurs
 	  moyenne = 0.3*r + 0.59*g + 0.11*b;
 	  ++histo[moyenne]; 
 	  binaryArray[i][j]=moyenne;
@@ -84,6 +90,7 @@ void GreyScaleArray (int h, int w, SDL_Surface* image, Uint8 binaryArray[h][w])
     }
 }
 
+//Applique matrice de convolution sur l'image
 void Convolution(int h, int w, int matrix[3][3],Uint8 binaryArray[h][w])
 {
   Uint8 mem_tampon[h][w];
@@ -113,7 +120,7 @@ void Convolution(int h, int w, int matrix[3][3],Uint8 binaryArray[h][w])
 	  binaryArray[i][j] = mem_tampon[i][j];
 	}
     }
-    }
+}
 
 //Binarisation de l'image grace au seuil
 void Binarize(int h, int w, Uint8 binaryArray[h][w])

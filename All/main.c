@@ -31,9 +31,8 @@ SDL_Surface* load_image(char *path)
 int main(int argc, char *argv[])
 {
   if (argc < 2)
-    {
       errx(2, "Missing argument");
-    }
+      
   int quit = 0;
   SDL_Event event;
   init_sdl();
@@ -42,13 +41,13 @@ int main(int argc, char *argv[])
 					 SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1080, 860, 0);
   SDL_Renderer * renderer = SDL_CreateRenderer(window, -1, 0);
   SDL_Surface * image = load_image(argv[1]);
-  int h = image ->h;
+  int h = image -> h;
   int w = image -> w;
   Uint8 binaryArray[h][w];
   if(argc == 2 || strcmp(argv[2],"s") == 0 || strcmp(argv[2],"segmentation") == 0)
     {
       AllTreatment(h, w, binaryArray,image, "");
-      InitFile(h,w,binaryArray, image);
+      InitFile(h,w,binaryArray, image); //Appelle la segmentation
     }
   else
     {
