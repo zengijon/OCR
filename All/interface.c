@@ -41,13 +41,17 @@ int main()
 	SDL_Window * window = SDL_CreateWindow("OCR",
 					 SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 
 					 640, 480, SDL_WINDOW_RESIZABLE);
-	SDL_Renderer * renderer = SDL_CreateRenderer(window, -1, 0);
+	SDL_Renderer * renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	SDL_Color noire = {255, 255, 255, 0};
 	char txt[300];
 
 	TTF_Font *police = TTF_OpenFont("arial.ttf", 25);
-	SDL_Surface * text = TTF_RenderText_Blended(police, "", noire);
-	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, text);
+	SDL_Surface *text = TTF_RenderText_Blended(police, "", noire);
+	SDL_Texture *blit = SDL_CreateTextureFromSurface(renderer,load_image("test.jpg"));
+	SDL_Surface *ecran = load_image("rectangle-noir.jpg");
+	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, ecran);
+	SDL_Texture *t = SDL_CreateTextureFromSurface(renderer, text);
+	SDL_Rect all = {0, 0, 200, 200};
 
 	int texW = 0;
 	int texH = 0;
@@ -62,7 +66,7 @@ int main()
            case SDL_TEXTINPUT:
             strcat(txt, event.text.text);
         	text = TTF_RenderText_Blended(police, txt, noire);
-			texture = SDL_CreateTextureFromSurface(renderer, text);
+			t = SDL_CreateTextureFromSurface(renderer, text);
         	break;
            case SDL_MOUSEBUTTONUP:
             printf("x : %d, y : %d\n", event.button.x, event.button.y);
@@ -71,22 +75,28 @@ int main()
            	if (event.key.keysym.sym == SDLK_RETURN)
             {
             	text = load_image(txt);
-            	texture = SDL_CreateTextureFromSurface(renderer, text);
+            	t = SDL_CreateTextureFromSurface(renderer, text);
             	break;
             }
         }
-        SDL_QueryTexture(texture, NULL, NULL, &texW, &texH);
+        SDL_QueryTexture(t, NULL, NULL, &texW, &texH);
         SDL_GetWindowSize(window, &w, &h);
         if(texH > h)
         	texH = h;
 
-        if(texW > w)
+        if(texW > w-200)
         {
-        	texW = w;
+        	texW = w-200;
         }
 
 		SDL_Rect dstrect = {0, 0, texW, texH};
-        SDL_RenderCopy(renderer, texture, NULL, &dstrect);
+		all.x = texW;
+		//SDL_Rect real = {0, 0, texW+200, texH+200};
+		//SDL_BlitSurface(blit, NULL, text, &all);
+		//texture = SDL_CreateTextureFromSurface(renderer, ecran);
+		SDL_RenderCopy(renderer, texture, NULL, NULL);
+		SDL_RenderCopy(renderer, t, NULL, &dstrect);
+		SDL_RenderCopy(renderer, blit, NULL, &all);
         SDL_RenderPresent(renderer);
 	}
 
@@ -95,6 +105,8 @@ int main()
 	TTF_CloseFont(police);
 	SDL_DestroyTexture(texture);
 	SDL_FreeSurface(text);
+	SDL_DestroyTexture(blit);
+	SDL_FreeSurface(ecran);
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	SDL_Quit();
