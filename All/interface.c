@@ -33,37 +33,10 @@ SDL_Surface* load_image(char *path)
     return img;
 }
 
-/*int is_button(int mouse_x, int mouse_y, int src_x, int src_y, int size)
-{
-	if (mouse_y >= src_y && mouse_y <= src_y+size)
-	{
-		if (mouse_x >= src_x && mouse_x <= src_x + size)
-		{
-			return true;
-		}
-	}
-	return false;
-}
-
-int mouse(int mouse_x, int mouse_y, int texW)
-{
-
-	for (int i = 0; i < count; ++i)
-	{
-		if (is_button(mouse_x, event.button.y, texW/2, 0, 200) && display_button)
-		{
-			int h = text -> h;
-			int w = text -> w;
-			Uint8 binaryArray[h][w];
-			AllTreatment(h, w, binaryArray, text, "g");
-			display_Array(h, w, binaryArray, text);
-			t = SDL_CreateTextureFromSurface(renderer, text);
-		}
-	}
-}*/
-
 int main()
 {
+	//Define all the variables
+
 	int done = false;
 	SDL_Event event;
 	init_sdl();
@@ -75,19 +48,18 @@ int main()
 					 1350, 750, SDL_WINDOW_RESIZABLE);
 	SDL_Renderer * renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	SDL_Color vert = {127, 255, 0, 0};
-	char txt[300];
-
-	TTF_Font *police = TTF_OpenFont("arial.ttf", 50);
-	SDL_Surface *text = TTF_RenderText_Blended(police, "", vert);
-	SDL_Texture *blit = SDL_CreateTextureFromSurface(renderer,load_image("grayscale.jpg"));
-	SDL_Surface *ecran = load_image("rectangle-noir.jpg");
-	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, ecran);
-	SDL_Texture *t = SDL_CreateTextureFromSurface(renderer, text);
 	SDL_Rect all = {0, 0, 200, 200};
-	SDL_Texture *res = SDL_CreateTextureFromSurface(renderer, load_image("rectangle-blanc.jpg"));
-	SDL_Surface *tmp = load_image("rectangle-noir.jpg");
-	SDL_Texture *binarize = SDL_CreateTextureFromSurface(renderer, load_image("binarize.jpg"));
-	SDL_Texture *segmentation = SDL_CreateTextureFromSurface(renderer, load_image("segmentation.jpg"));
+	char txt[300];
+	TTF_Font *police = TTF_OpenFont("Data/arial.ttf", 50);
+	SDL_Surface *surface_text = TTF_RenderText_Blended(police, "", vert);
+	SDL_Surface *ecran = load_image("Data/rectangle-noir.jpg");
+	SDL_Surface *tmp = load_image("Data/rectangle-noir.jpg");
+	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, ecran);
+	SDL_Texture *t = SDL_CreateTextureFromSurface(renderer, surface_text);
+	SDL_Texture *gray = SDL_CreateTextureFromSurface(renderer,load_image("Data/grayscale.jpg"));
+	SDL_Texture *res = SDL_CreateTextureFromSurface(renderer, load_image("Data/rectangle-blanc.jpg"));
+	SDL_Texture *binarize = SDL_CreateTextureFromSurface(renderer, load_image("Data/binarize.jpg"));
+	SDL_Texture *segmentation = SDL_CreateTextureFromSurface(renderer, load_image("Data/segmentation.jpg"));
 
 	int display_button = false;
 	int nb_char = 0;
@@ -95,23 +67,31 @@ int main()
 
 	int texW = 0;
 	int texH = 0;
+
+	/*=========================================================
+  =========================================================*/
+	//loop until the window is closed
 	while(!done)
 	{
 		SDL_WaitEvent(&event);
         switch(event.type)
         {
+        	//Stop the loop
            case SDL_QUIT:
             done = true;
             break;
+            //Add the caracter to the path
            case SDL_TEXTINPUT:
            if (!display_button)
            {
            	nb_char++;
            	strcat(txt, event.text.text);
-           	text = TTF_RenderText_Blended(police, txt, vert);
-           	t = SDL_CreateTextureFromSurface(renderer, text);
+           	surface_text = TTF_RenderText_Blended(police, txt, vert);
+           	t = SDL_CreateTextureFromSurface(renderer, surface_text);
            }
         	break;
+        	//if we click on a button do what he's supposed to
+        	//do
            case SDL_MOUSEBUTTONUP:
            	if (event.button.x > texW/2 && event.button.x < texW/2+200)
            	{
@@ -124,11 +104,11 @@ int main()
 	           		if (!first_change)
 	           			t = res;
 	           		first_change = false;
-           			int h = text->h;
-           			int w = text->w;
+           			int h = surface_text->h;
+           			int w = surface_text->w;
            			Uint8 binaryArray[h][w];
-           			AllTreatment(h, w, binaryArray, text, "");
-           			InitFile(h,w,binaryArray, text);
+           			AllTreatment(h, w, binaryArray, surface_text, "");
+           			InitFile(h,w,binaryArray, surface_text);
            			display_Array(h, w, binaryArray, tmp);
 					res = SDL_CreateTextureFromSurface(renderer, tmp);break;
            		}
@@ -139,35 +119,38 @@ int main()
            		if (!first_change)
            			t = res;
            		first_change = false;
-           		int h = text->h;
-				int w = text->w;
+           		int h = surface_text->h;
+				int w = surface_text->w;
 				Uint8 binaryArray[h][w];
-				AllTreatment(h, w, binaryArray, text, s);
+				AllTreatment(h, w, binaryArray, surface_text, s);
 				display_Array(h, w, binaryArray, tmp);
 				res = SDL_CreateTextureFromSurface(renderer, tmp);
 
            	}
             break;
            case SDL_KEYDOWN:
+           //Open the image at path
            	if (event.key.keysym.sym == SDLK_RETURN && !display_button)
             {
-            	text = load_image(txt);
+            	surface_text = load_image(txt);
             	tmp = load_image(txt);
-            	t = SDL_CreateTextureFromSurface(renderer, text);
+            	t = SDL_CreateTextureFromSurface(renderer, surface_text);
             	display_button = true;
             	break;
             }
+            //Delete a character of the path when backspace
             if (event.key.keysym.sym == SDLK_BACKSPACE && !display_button)
             {
             	if (nb_char > 0)
             	{
             		txt[nb_char-1] = 0;
             		nb_char--;
-            		text = TTF_RenderText_Blended(police, txt, vert);
-           			t = SDL_CreateTextureFromSurface(renderer, text);
+            		surface_text = TTF_RenderText_Blended(police, txt, vert);
+           			t = SDL_CreateTextureFromSurface(renderer, surface_text);
             	}
             }
         }
+        //Find the right size for the images
         SDL_QueryTexture(t, NULL, NULL, &texW, &texH);
         SDL_GetWindowSize(window, &w, &h);
         if(texH > h)
@@ -188,11 +171,13 @@ int main()
 		SDL_Rect dstres = {(texW/2+200), 0, texW/2, texH};
 		all.y = 0;
 		all.x = texW/2;
+
+		//Put all the images together
 		SDL_RenderCopy(renderer, texture, NULL, NULL);
 		SDL_RenderCopy(renderer, t, NULL, &dstrect);
 		if (display_button)
 		{
-			SDL_RenderCopy(renderer, blit, NULL, &all);
+			SDL_RenderCopy(renderer, gray, NULL, &all);
 			all.y = 200;
 			SDL_RenderCopy(renderer, binarize, NULL, &all);
 			all.y = 400;
@@ -202,12 +187,14 @@ int main()
         SDL_RenderPresent(renderer);
 	}
 
-	//FREE SURFACE
+	//FREE MEMORY
 
 	TTF_CloseFont(police);
 	SDL_DestroyTexture(texture);
-	SDL_FreeSurface(text);
-	SDL_DestroyTexture(blit);
+	SDL_FreeSurface(surface_text);
+	SDL_FreeSurface(tmp);
+	SDL_DestroyTexture(segmentation);
+	SDL_DestroyTexture(gray);
 	SDL_DestroyTexture(t);
 	SDL_DestroyTexture(res);
 	SDL_DestroyTexture(binarize);

@@ -1,25 +1,23 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -std=c99 -pedantic-errors
+LDFLAGS = -lm -lSDL2-2.0 -lSDL2_image -lSDL2_ttf
+SRC = interface.c \
+	PreTreatment.c \
+	utility_SDL.c \
+	Segmentation.c \
+	interface.c \
+	Reseau.c \
+	vector.c
 
-all:main # Reseau
+OBJ = $(SRC:.c=.o)
 
-main: utility_SDL.o PreTreatment.o Segmentation.o interface.o Reseau.o #main.o
-	gcc *.c -o main -lm -lSDL2-2.0 -lSDL2_image -lSDL2_ttf
+all:main
 
-#Reseau: XOR.o
-#	gcc *.c -o main -lm
-
-interface: interface.o
-	gcc interface.c PreTreatment.c utility_SDL.c Segmentation.c -o interface -lSDL2-2.0 -lSDL2_image -lSDL2_ttf
+main: $(OBJ)
+	  $(CC) -o $@ $^ $(LDFLAGS)
 
 clean:
 	rm -f *.o
 	rm -f main
 	rm -f *~
-
-clean_save:
-	rm -f *.o
-	rm -f main
-	rm -f *~
-	rm -f save.txt
 

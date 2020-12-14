@@ -60,7 +60,7 @@ void vector_insert(struct vector *v, size_t i, int x)
   if (i >= v -> size)
     return;
   vector_push(v,v -> data[v->size-1]);
-  for (int j = v->size-2;j>i;--j)
+  for (size_t j = v->size-2;j>i;--j)
     v -> data[j] = v ->data[j-1];
   v-> data[i]=x;
 }
@@ -70,7 +70,7 @@ int vector_remove(struct vector *v, size_t i, int *x)
     if (i >= v -> size)
     return 0 ;
     *x = v -> data[i];
-    for (int j = i;j<v->size-1;--j)
+    for (size_t j = i;j<v->size-1;--j)
       v -> data[j] = v ->data[j+1];
     v->size--;
     return 1;
