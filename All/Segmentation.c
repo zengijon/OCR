@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include "stdbool.h"
 #include "vector.h"
+#include "Reseau.h"
+
 
 SDL_Surface * image;
 
@@ -72,12 +74,13 @@ void scale_down_to_28(int h, int w,int* binaryArray)
 {
   float ratio_h = ((float) h) / 28;
   float ratio_w = ((float) w) / 28;
-  Uint8 binaryArray28[28][28];
+  float binaryArray28[28][28];
   for(int i = 0; i < 28; i++)
       for (int j = 0;  j < 28; j++)
-	  binaryArray28[i][j] = binaryArray[(int)(i*ratio_h+0.5)*w + (int)(j*ratio_w+0.5)];
+	binaryArray28[i][j] = (float)binaryArray[(int)(i*ratio_h+0.5)*w + (int)(j*ratio_w+0.5)];
 	    //binaryArray[(int)(i*ratio_h+0.5)][(int)(j*ratio_w+0.5)];
   // call neural network with binaryArray28[28][28]
+  Reseau(binaryArray28);
 }
 
 void white_to_vector(int h, int w, int i, int j, Uint8 binaryArray[h][w])
@@ -85,7 +88,7 @@ void white_to_vector(int h, int w, int i, int j, Uint8 binaryArray[h][w])
   struct vector* v = vector_new();
   for (; i < h && (binaryArray[i][j] == 0 || binaryArray[i][j]) ; v-> height = ++i)
     for(;j < w && (binaryArray[i][j] == 0 || binaryArray[i][j] == 255) ; v-> weight = ++j)
-	   vector_push(v,binaryArray[i][j]);
+      vector_push(v,binaryArray[i][j]);
   scale_down_to_28(v -> height,v -> weight, v-> data);
   vector_free(v);
 	

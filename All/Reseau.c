@@ -23,11 +23,11 @@ float WeightUpdate(float d, float o){
 
 
 
-void InitGraph(float image[784], float weight[830][830],float neurone[830])
+void InitGraph(float image[28][28], float weight[830][830],float neurone[830])
 {
   for(int i = 0;i<784;i+=2)
     {
-      neurone[i]=image[i];
+      neurone[i]=image[i%28][i/28];
       neurone[i+1]=1;
     }
   
@@ -60,7 +60,8 @@ void RunReseau(float weight[830][830],float neurone[830]){
     }
 }
 
-void BackProp(float weight[830][830],float neurone[830],float target[8]){
+void BackProp(float weight[830][830],float neurone[830],float target[8])
+{
   for(int i = 814; i<830; i+=2)
     {
       float d = OutputError(neurone[i],target[i-814]);
@@ -93,7 +94,7 @@ void BackProp(float weight[830][830],float neurone[830],float target[8]){
                 --Save & Load--  
 ===============================================*/
 
-void save(float weight[830][830])
+/*void save(float weight[830][830])
 {
     FILE* sav = fopen("save.txt", "w+");
     for (int i = 0; i < 784; i++)
@@ -137,13 +138,12 @@ void load(float weight[830][830])
     }
     fclose(sav);
 }
-
+*/
 /*=============================================
         --A few fuction to rules them All--  
 ===============================================*/
 
 int binArray_to_int(float neurone[830]){
-
   int res = 0;
   int power = 1;
   for (int i = 814; i<830; i+=2)
@@ -155,17 +155,18 @@ int binArray_to_int(float neurone[830]){
   return res;
 }
 
-int Reseau(float image[784], float target[10])
+int Reseau(float image[28][28])
 {
   float weight[830][830];
   float neurone[830];
   InitGraph(image, weight, neurone);
-  BackProp(weight, neurone,target);
+  //BackProp(weight, neurone,target);
   RunReseau(weight, neurone);
   return 0;
 }
 
-int main(){
+/*int main(){
 
   return 0;
 }
+*/

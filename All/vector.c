@@ -9,7 +9,7 @@ struct vector *vector_new()
   data = malloc(sizeof(int));
   if (data == NULL || vector == NULL)
     errx(1,"Not enough memory!");
-  vetcor -> height = 0;
+  vector -> height = 0;
   vector -> weight = 0; 
   vector -> capacity = 1;
   vector -> size = 0;
@@ -26,7 +26,8 @@ void vector_free(struct vector *v)
 void double_capacity(struct vector *v)
 {
   v-> capacity *=2; 
-  realloc(v->data,sizeof(int)*(v->capacity));
+  if (NULL == realloc(v->data,sizeof(int)*(v->capacity)))
+        errx(1,"Not enough memory!");
 }
 
 void vector_push(struct vector *v, int x)

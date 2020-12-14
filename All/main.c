@@ -60,6 +60,7 @@ int main(int argc, char *argv[])
   display_Array(h,w,binaryArray, image);
   
   
+  
   SDL_Texture * texture = SDL_CreateTextureFromSurface(renderer, image);
   SDL_RenderCopy(renderer, texture, NULL, NULL);
   SDL_RenderPresent(renderer);
