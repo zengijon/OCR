@@ -1,11 +1,17 @@
+#include <stdio.h>
+#include <gtk/gtk.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL.h>
-#include <stdio.h>
+#include <SDL2/SDL_ttf.h>
 #include <stdlib.h>
-#include "utility_SDL.h"
-#include "PreTreatment.h"
 #include <err.h>
+#include "PreTreatment.h"
+#include "utility_SDL.h"
 #include "Segmentation.h"
+
+#define true 1
+#define false 0
+
 
 void init_sdl()
 {
@@ -28,60 +34,80 @@ SDL_Surface* load_image(char *path)
     return img;
 }
 
+GtkWidget *window;
+GtkWidget *grid;
+GtkBuilder* builder;
+GtkWidget *image;
+GtkWidget *res;
+SDL_Surface *surface;
+char *filename;
+
+void open_dialog(GtkWidget *window)
+{
+	GtkWidget *dialog;
+
+	dialog = gtk_file_chooser_dialog_new("Choose a file", GTK_WINDOW(window), GTK_FILE_CHOOSER_ACTION_OPEN, 
+		"_Open", GTK_RESPONSE_ACCEPT, "_Cancel", GTK_RESPONSE_CANCEL, NULL);
+	gtk_widget_show_all(dialog);
+	gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dialog), g_get_home_dir());
+	gint answer = gtk_dialog_run(GTK_DIALOG(dialog));
+	if(answer == GTK_RESPONSE_ACCEPT)
+	{
+		GtkFileChooser *chooser = GTK_FILE_CHOOSER(dialog);
+		filename = gtk_file_chooser_get_filename(chooser);
+		gtk_image_set_from_file(GTK_IMAGE(image), filename);
+		gtk_image_set_from_file(GTK_IMAGE(res), filename);
+	}
+    gtk_widget_destroy(dialog);
+}
+
+void init_window()
+{
+	GtkWidget *button;
+
+	window = GTK_WIDGET(gtk_builder_get_object(builder, "Main_window"));
+	
+	g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
+
+	button = GTK_WIDGET(gtk_builder_get_object(builder, "Open"));
+	g_signal_connect(GTK_BUTTON(button), "activate", G_CALLBACK(open_dialog), NULL);
+
+	image = GTK_WIDGET(gtk_builder_get_object(builder, "image"));
+	res = GTK_WIDGET(gtk_builder_get_object(builder, "res"));
+}
+
+void freeS()
+{
+	SDL_FreeSurface(surface);
+	SDL_Quit();
+}
+
 int main(int argc, char *argv[])
 {
-  if (argc < 2)
-      errx(2, "Missing argument");
-      
-  int quit = 0;
-  SDL_Event event;
-  init_sdl();
- 
-  SDL_Window * window = SDL_CreateWindow("SDL2 Displaying Image",
-					 SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1080, 860, 0);
-  SDL_Renderer * renderer = SDL_CreateRenderer(window, -1, 0);
-  SDL_Surface * image = load_image(argv[1]);
-  int h = image -> h;
-  int w = image -> w;
-  Uint8 binaryArray[h][w];
-  if(argc == 2 || strcmp(argv[2],"s") == 0 || strcmp(argv[2],"segmentation") == 0)
-    {
-      AllTreatment(h, w, binaryArray,image, "");
-      InitFile(h,w,binaryArray, image); //Appelle la segmentation
-    }
-  else
-    {
-      if (strcmp(argv[2],"b") == 0|| strcmp(argv[2],"binarize") == 0||
-	  strcmp(argv[2],"g") == 0|| strcmp(argv[2],"grayscale") == 0)
-	AllTreatment(h, w, binaryArray,image, argv[2]);
-      else
-	errx(3, "Argument : %s doesn't exist", argv[2]);
-    }
-  display_Array(h,w,binaryArray, image);
-  
-  
-  
-  SDL_Texture * texture = SDL_CreateTextureFromSurface(renderer, image);
-  SDL_RenderCopy(renderer, texture, NULL, NULL);
-  SDL_RenderPresent(renderer);
+	//ALL INIT OF GTK AND SDL
+	gtk_init(&argc, &argv);
+	builder = gtk_builder_new();
 
-  while (!quit)
-    {
-      SDL_WaitEvent(&event);
+	GError* error = NULL;
 
-      switch (event.type)
+	if (gtk_builder_add_from_file(builder, "main.glade", &error) == 0)
 	{
-        case SDL_QUIT:
-	  quit = 1;
-	  break;
-        }
-    }
+		g_printerr("Error loading file: %s\n", error->message);
+		g_clear_error(&error);
+		return 1;
+	}
+	init_window();
 
-  SDL_DestroyTexture(texture);
-  SDL_FreeSurface(image);
-  SDL_DestroyRenderer(renderer);
-  SDL_DestroyWindow(window);
-  SDL_Quit();
 
-  return 0;
+
+
+
+
+	gtk_widget_show_all(window);
+	gtk_main();
+
+	freeS();
+
+	printf("%s\n", "test");
+	return 0;
 }
