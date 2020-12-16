@@ -70,8 +70,6 @@ void CheckColumn(int h, int w, Uint8 binaryArray[h][w])
     }
 }
 
-
-
 void InitFile(int h,int w, Uint8 binaryArray[h][w],SDL_Surface * image_s)
 {
   image = image_s;
