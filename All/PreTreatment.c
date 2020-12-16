@@ -90,6 +90,27 @@ void GreyScaleArray (int h, int w, SDL_Surface* image, Uint8 binaryArray[h][w])
     }
 }
 
+void arrayd(int h, int w, SDL_Surface* image, Uint8 binaryArray[h][w])
+{
+  Uint8 r = 0;
+  Uint8 g = 0;
+  Uint8 b = 0;
+  Uint8 a = 0;
+  Uint8 moyenne = 0;
+  Uint32 ip;
+
+  for(int i = 0; i < h; i++)
+    {
+      for (int j = 0;  j < w; j++)
+        {
+          ip = getpixel(image, j, i);
+          SDL_GetRGBA(ip,image->format, &r,&g,&b,&a);
+          moyenne = 0.3*r + 0.59*g + 0.11*b;
+          binaryArray[i][j] = moyenne;
+        }
+    }
+}
+
 //Applique matrice de convolution sur l'image
 void Convolution(int h, int w, int matrix[3][3],Uint8 binaryArray[h][w])
 {
@@ -123,9 +144,15 @@ void Convolution(int h, int w, int matrix[3][3],Uint8 binaryArray[h][w])
 }
 
 //Binarisation de l'image grace au seuil
-void Binarize(int h, int w, Uint8 binaryArray[h][w])
+int Binarize(int h, int w, Uint8 binaryArray[h][w], SDL_Surface *image, int s)
 {
-  int seuil = max_s();
+  nb_pixels = h*w;
+  GreyScaleArray(h, w, image, binaryArray);
+  int seuil;
+  if (s > 1)
+    seuil = s;
+  else
+    seuil = max_s();
   for(int i = 0; i < h; i++)
     {
       for (int j = 0;  j < w; j++)
@@ -136,13 +163,16 @@ void Binarize(int h, int w, Uint8 binaryArray[h][w])
 	    binaryArray[i][j] = 255;
 	}
     }
+  printf("%d\n", seuil);
+  return seuil;
 }
 
 //Fonction principale du fichier rassemblant toutes les fonctions précédante
-void AllTreatment(int h, int w, Uint8 binaryArray[h][w],SDL_Surface* image, char* t)
+/*int AllTreatment(int h, int w, Uint8 binaryArray[h][w],SDL_Surface* image, char* t)
 {
   nb_pixels = h*w; 
   GreyScaleArray(h, w, image, binaryArray);
   if (strcmp(t, "b") == 0 || strcmp(t, "binarize") == 0 || strcmp(t, "") == 0)
-  	Binarize(h, w, binaryArray);
-}
+  	return Binarize(h, w, binaryArray, 0);
+  return 0;
+}*/
