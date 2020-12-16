@@ -8,6 +8,7 @@
 #include "PreTreatment.h"
 #include "utility_SDL.h"
 #include "Segmentation.h"
+#include "Call_Reseau.h"
 
 #define true 1
 #define false 0
@@ -78,6 +79,21 @@ void open_dialog(GtkWidget *window)
     gtk_widget_destroy(dialog);
 }
 
+void test(Uint8 binaryArray[h][w])
+{
+	InitFile(h, w, binaryArray, surface);
+	display_Array(h, w, binaryArray, surface);
+	IMG_SavePNG(surface, "Save/res.png");
+	open_image(res, "Save/res.png");
+	search_segmented(h, w, binaryArray);
+	printf("euh\n");
+	display_Array(h, w, binaryArray, surface);
+	IMG_SavePNG(surface, "Save/res2.png");
+	open_image(res, "Save/res2.png");
+	printf("soit\n");
+
+}
+
 void binarize_image()
 {
 	if (binarized == false)
@@ -88,7 +104,10 @@ void binarize_image()
 	    display_Array(h, w, binaryArray, surface);
 	    IMG_SavePNG(surface, "Save/res.png");
 	    open_image(res, "Save/res.png");
+
+	    test(binaryArray);
 	}
+	printf("ok\n");
 }
 
 void revert_image()

@@ -27,28 +27,30 @@ void save(double weight[866][866])
 {
   FILE* sav = fopen("save.txt", "w+");
   for (int i = 0; i < 784; i++)
+  {
+    for (int j = 784; j < 814; j+=2)
     {
-      for (int j = 784; j < 814; j+=2)
-        {
-	  char point[15];
-	  sprintf(point,"%f",weight[i][j]);
-	  fputs(point,sav);
-	  fputc('\n', sav);
-	} 
-    }
-  
-  for (int i = 784; i < 814; i+=2)
-    {
-      for (int j = 814; j < 866; j+=2)
-        {
-	  char point[15];
-	  sprintf(point,"%f",weight[i][j]);
-	  fputs(point,sav);
-	  fputc('\n', sav);
-	} 
-    }
-    
-  fclose(sav);
+     char point[15];
+     sprintf(point,"%f",weight[i][j]);
+     fputs(point,sav);
+     fputc('\n', sav);
+   } 
+ }
+ printf("lolilol\n");
+
+ for (int i = 784; i < 814; i+=2)
+ {
+  for (int j = 814; j < 866; j+=2)
+  {
+   char point[15];
+   sprintf(point,"%f",weight[i][j]);
+   fputs(point,sav);
+   fputc('\n', sav);
+ } 
+}
+
+
+fclose(sav);
 }
 
 void load(double weight[866][866])
@@ -104,7 +106,7 @@ void RunReseau(double weight[866][866],double neurone[866]){
       for(int i = 0;i<784;i++)
 	{
 	  //printf("%f\n",weight[i][j]);
-	  printf("i = %d, j = %d\n",i,j);
+	  //printf("i = %d, j = %d\n",i,j);
 	  //fflush(stdout);
 	  s += weight[i][j]*neurone[i];
 	  //printf("test2\n");
@@ -177,22 +179,25 @@ char Reseau(double image[28][28], char c)
   double neurone[866];
   double weight[866][866];
   double target[26];
-  
+
+  printf("Init\n");
   Init_Reseau(image,target,neurone,weight,c);
-  
+  printf("Run\n");
   RunReseau(weight, neurone);
 
  
 
-  
+  printf("Back\n");
   BackProp(weight, neurone,target);
 
+  printf("save\n");
   //printf("test\n");
   save(weight);
 
-  
+  printf("lol\n");
   char res = binArray_to_letter(neurone);
+  printf("end\n");
   //printf("%c\n",res);
-  Print_return_Array(neurone);
+  //Print_return_Array(neurone);
   return res;
 }
