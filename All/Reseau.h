@@ -1,6 +1,6 @@
 #ifndef RESEAU_H
 #define RESEAU_H
 
-int Reseau(float image[28][28]);
+char Reseau(float image[28][28],char c);
 
 #endif
