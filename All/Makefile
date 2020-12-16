@@ -6,8 +6,7 @@ SRC = main.c \
 	PreTreatment.c \
 	utility_SDL.c \
 	Segmentation.c \
-	Reseau.c \
-	vector.c
+	Reseau.c
 
 OBJ = $(SRC:.c=.o)
 
@@ -20,4 +19,10 @@ clean:
 	rm -f *.o
 	rm -f main
 	rm -f *~
+
+save_clean:
+	rm -f *.o
+	rm -f main
+	rm -f *~
+	rm -f save.txt	
 

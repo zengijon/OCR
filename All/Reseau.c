@@ -124,9 +124,10 @@ void RunReseau(double weight[866][866],double neurone[866]){
 
 void BackProp(double weight[866][866],double neurone[866],double target[26])
 {
+  double d;
   for(int i = 814; i<866; i+=2)
     {
-      double d = OutputError(neurone[i],target[(i-814)/2]);
+      d = OutputError(neurone[i],target[(i-814)/2]);
       for(int j = 784; j<814;j+=2)
 	weight[j][i] += WeightUpdate(d,neurone[i]);
       weight[i+1][i] += WeightUpdate(d,neurone[i]);
@@ -134,12 +135,12 @@ void BackProp(double weight[866][866],double neurone[866],double target[26])
 
   for(int i = 784; i<814;i+=2)
     {
-      double d =0;
+      d =0;
       for(int j = 814; j<866;j+=2)
 	{
-	  d +=OutputError(neurone[j],target[(j-784)/2)*weight[i][j];
+	  d +=OutputError(neurone[j],target[(j-784)/2])*weight[i][j];
 	}
-	double d *=(1-d)*d;
+	d *=(1-d)*d;
       for(int k = 0; k<784;++k)
 	{
 	  weight[k][i] +=  WeightUpdate(d,neurone[k]);
