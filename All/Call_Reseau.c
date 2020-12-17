@@ -11,14 +11,27 @@ char scale_down_to_28(int h, int w,Uint8 binaryArray[h][w],char c)
   double binaryArray28[28][28];
   for(int i = 0; i < 28; i++)
       for (int j = 0;  j < 28; j++)
-        binaryArray28[i][j] = (double)binaryArray[(int)(i*ratio_h+0.5)][(int)(j*ratio_w+0.5)];
-  printf("Scale_Down %d\n", number);
+        {
+          double tmp = (double)binaryArray[(int)(i*ratio_h+0.5)][(int)(j*ratio_w+0.5)];
+          if (tmp == 0)
+          {
+            binaryArray28[i][j] = 0;
+          }
+          else if (tmp == 255)
+          {
+            binaryArray28[i][j] = 1;
+          }
+          else 
+            binaryArray28[i][j] = tmp/255;
+          
+        }
+  //printf("Scale_Down %d\n", number);
   return Reseau(binaryArray28, c);
 }
 
 char white_to_vector(int h, int w, int i, int j, Uint8 binaryArray[h][w], char c)
 {
-  printf("White Vector begin %d\n", number);
+  //printf("White Vector begin %d\n", number);
   int _h =0;
   int _w =0;
   for (; _h + i < h && (binaryArray[_h+i][j] == 0 || binaryArray[_h+i][j] == 255) ; _h++);
@@ -32,7 +45,7 @@ char white_to_vector(int h, int w, int i, int j, Uint8 binaryArray[h][w], char c
         binaryArray[i+y][j+k] = 129;
       }
 
-  printf("White Vector end %d\n", number);
+  //printf("White Vector end %d\n", number);
 
   return scale_down_to_28(_h, _w,NewArray, c);
   /*for (int i = 0; i < count; ++i)
@@ -56,7 +69,7 @@ for (int i = 0; i < h; ++i)
         if (binaryArray[i][j] == 0 || binaryArray[i][j] == 255)
         {
           number++;
-          printf("Segmented : %d\n", number);
+          //printf("Segmented : %d\n", number);
           white_to_vector(h, w,i,j, binaryArray, target[k++%26]);
         }
         //printf("forj\n");

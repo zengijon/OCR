@@ -31,19 +31,19 @@ void save(double weight[866][866])
     for (int j = 784; j < 814; j+=2)
     {
      char point[15];
-     sprintf(point,"%f",weight[i][j]);
+     sprintf(point,"%lf",weight[i][j]);
      fputs(point,sav);
      fputc('\n', sav);
    } 
  }
- printf("lolilol\n");
+ //printf("lolilol\n");
 
  for (int i = 784; i < 814; i+=2)
  {
   for (int j = 814; j < 866; j+=2)
   {
    char point[15];
-   sprintf(point,"%f",weight[i][j]);
+   sprintf(point,"%lf",weight[i][j]);
    fputs(point,sav);
    fputc('\n', sav);
  } 
@@ -60,7 +60,7 @@ void load(double weight[866][866])
     {
       for (int i =0; i < 866;++i)
 	for (int j = 0;j< 866;++j)
-	  weight[i][j] = (double)rand() / (double)RAND_MAX;
+    weight[i][j] = (double)rand() / (double)RAND_MAX;
       return;
     }
   for (int i = 0; i < 3; i++)
@@ -85,14 +85,13 @@ void Init_Reseau(double image[28][28],double target[26],double neurone[866],doub
     target[i]=1;
   target[((int) c) - 97] = 1;
   
-  for(int i = 0;i<784;i+=2)
+  for(int i = 0;i<784;i++)
     {
       neurone[i]=image[i%28][i/28];
     }
   
   for(int i = 784;i<866;++i)
     neurone[i] = 1;
-
 
   load(weight);
 }
@@ -105,14 +104,16 @@ void RunReseau(double weight[866][866],double neurone[866]){
       double s = 0;
       for(int i = 0;i<784;i++)
 	{
-	  //printf("%f\n",weight[i][j]);
+	  //printf("%lf\n",weight[i][j]);
 	  //printf("i = %d, j = %d\n",i,j);
 	  //fflush(stdout);
-	  s += weight[i][j]*neurone[i];
+    s += weight[i][j]*neurone[i];
+    //printf("%lf\n", s);
 	  //printf("test2\n");
 	  //fflush(stdout);
 	}
       neurone[j]=sigmoid(s+weight[j+1][j]);
+      //printf("%lf\n", neurone[j]);
     }
   
   for(int j = 814;j<866;j+=2)
@@ -140,7 +141,7 @@ void BackProp(double weight[866][866],double neurone[866],double target[26])
       d =0;
       for(int j = 814; j<866;j+=2)
 	{
-	  d +=OutputError(neurone[j],target[(j-784)/2])*weight[i][j];
+	  d +=OutputError(neurone[j],target[(j-814)/2])*weight[i][j];
 	}
 	d *=(1-d)*d;
       for(int k = 0; k<784;++k)
@@ -170,7 +171,7 @@ void Print_return_Array(double neurone[866])
 {
   printf("[");
   for (int i = 816; i<866; i+=2)
-    printf("%f, ",(double) neurone[i]);
+    printf("%lf, ",(double) neurone[i]);
   printf("]\n");
 }
 
@@ -179,25 +180,24 @@ char Reseau(double image[28][28], char c)
   double neurone[866];
   double weight[866][866];
   double target[26];
-
-  printf("Init\n");
+  //printf("Init\n");
   Init_Reseau(image,target,neurone,weight,c);
-  printf("Run\n");
+  //printf("Run\n");
   RunReseau(weight, neurone);
 
  
 
-  printf("Back\n");
+  //printf("Back\n");
   BackProp(weight, neurone,target);
 
-  printf("save\n");
+  //printf("save\n");
   //printf("test\n");
   save(weight);
 
-  printf("lol\n");
+  //printf("lol\n");
   char res = binArray_to_letter(neurone);
-  printf("end\n");
-  //printf("%c\n",res);
+  //printf("end\n");
+  printf("%c %c\n",res, c);
   //Print_return_Array(neurone);
   return res;
 }

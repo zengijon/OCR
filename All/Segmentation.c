@@ -5,9 +5,6 @@
 #include "stdbool.h"
 #include "Reseau.h"
 
-
-SDL_Surface * image;
-
 void CheckLine(int h, int w, Uint8 binaryArray[h][w])
 {
   int isLine = true;
@@ -69,11 +66,10 @@ void CheckColumn(int h, int w, Uint8 binaryArray[h][w])
     }
 }
 
-void InitFile(int h,int w, Uint8 binaryArray[h][w],SDL_Surface * image_s)
+void InitFile(int h,int w, Uint8 binaryArray[h][w])
 {
-  image = image_s;
   CheckLine(h, w, binaryArray);
-   CheckColumn(h, w, binaryArray);
+  CheckColumn(h, w, binaryArray);
 }
 
 

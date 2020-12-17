@@ -85,13 +85,12 @@ void test(Uint8 binaryArray[h][w])
 	display_Array(h, w, binaryArray, surface);
 	IMG_SavePNG(surface, "Save/res.png");
 	open_image(res, "Save/res.png");
-	search_segmented(h, w, binaryArray);
-	printf("euh\n");
-	display_Array(h, w, binaryArray, surface);
-	IMG_SavePNG(surface, "Save/res2.png");
-	open_image(res, "Save/res2.png");
-	printf("soit\n");
-
+	for (int i = 0; i < 1; ++i)
+	{
+		printf("%d\n", i);
+		search_segmented(h, w, binaryArray);
+	}
+	printf("testounet\n");
 }
 
 void binarize_image()
@@ -107,7 +106,6 @@ void binarize_image()
 
 	    test(binaryArray);
 	}
-	printf("ok\n");
 }
 
 void revert_image()
