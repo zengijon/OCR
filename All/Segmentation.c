@@ -1,9 +1,9 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include "utility_SDL.h"
+#include "Headers/utility_SDL.h"
 #include <stdio.h>
 #include "stdbool.h"
-#include "Reseau.h"
+#include "Headers/Reseau.h"
 
 void CheckLine(int h, int w, Uint8 binaryArray[h][w])
 {

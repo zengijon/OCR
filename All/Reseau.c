@@ -24,45 +24,45 @@ float WeightUpdate(float d, float o){
                 --Save & Load--  
   ===============================================*/
 
+//Save the weight of the Reseau
 void save(float weight[894][894])
 {
   FILE* sav = fopen("Save/save.txt", "w+");
   for (int j = 784; j < 842; j+=2)
   {
-    char point[15];
+    char point[20];
     sprintf(point,"%f",weight[j+1][j]);
     fputs(point,sav);
     fputc('\n', sav);
 
     for (int i = 0; i < 784; i++)
     {
-     char point[15];
+     char point[20];
      sprintf(point,"%f",weight[i][j]);
      fputs(point,sav);
      fputc('\n', sav);
 
    } 
  }
- //printf("lolilol\n");
  for (int j = 842; j < 894; j+=2)
  {
-  char point[15];
+  char point[20];
   sprintf(point,"%f",weight[j+1][j]);
   fputs(point,sav);
   fputc('\n', sav);
   for (int i = 784; i < 842; i+=2)
   {
-   char point[15];
+   char point[20];
    sprintf(point,"%f",weight[i][j]);
    fputs(point,sav);
    fputc('\n', sav);
  } 
 }
 
-
 fclose(sav);
 }
 
+//Load the Weight of the Reseau
 void load(float weight[894][894])
 {
   FILE* sav = fopen("Save/save.txt", "r");
@@ -75,40 +75,40 @@ void load(float weight[894][894])
             }
       return;
     }
-    for (int j = 784; j < 842; j+=2)
-    {
-      char point[20];
-      fgets(point, 15, sav);
-      float res = atof(point);
-      weight[j+1][j] = res;
-      for (int i = 0; i < 784; i++)
-        {
-	         char point[20];
-	         fgets(point, 15, sav);
-	         float res = atof(point);
-	         weight[i][j] = res;
-        }
-    }
-    for (int j = 842; j < 894; j+=2)
-    {
-      char point[20];
-      fgets(point, 15, sav);
-      float res = atof(point);
-      weight[j+1][j] = res;
-      for (int i = 784; i < 842; i+=2)
-        {
-          char point[20];
-          fgets(point, 15, sav);
-          float res = atof(point);
-          weight[i][j] = res;
-        }
-    }
+  /*for (int j = 784; j < 842; j+=2)
+  {
+    char point[20];
+    fgets(point, 15, sav);
+    float res = atof(point);
+    weight[j+1][j] = res;
+    for (int i = 0; i < 784; i++)
+      {
+         char point[20];
+         fgets(point, 15, sav);
+         float res = atof(point);
+         weight[i][j] = res;
+      }
+  }
+  for (int j = 842; j < 894; j+=2)
+  {
+    char point[20];
+    fgets(point, 15, sav);
+    float res = atof(point);
+    weight[j+1][j] = res;
+    for (int i = 784; i < 842; i+=2)
+      {
+        char point[20];
+        fgets(point, 15, sav);
+        float res = atof(point);
+        weight[i][j] = res;
+      }
+  }*/
   fclose(sav);
 }
 
 /*=============================================*/
 
-
+//Init the neurone and target expect, then load the weight
 void Init_Reseau(float image[28][28],float target[26],float neurone[894],float weight[894][894],char c)
 {
   for (int i =0; i< 26;++i)
@@ -123,10 +123,15 @@ void Init_Reseau(float image[28][28],float target[26],float neurone[894],float w
   for(int i = 784;i<894;++i)
     neurone[i] = 1;
 
-  load(weight);
-  //printf("%f\n", weight[0][784]);
+  //load(weight);
+    for (int i =0; i < 894;++i)
+     for (int j = 0;j< 894;++j)
+        {
+          weight[i][j] = (float)rand() / (float)RAND_MAX;
+        }
 }
 
+//
 void RunReseau(float weight[894][894],float neurone[894]){
 
   
@@ -138,7 +143,6 @@ void RunReseau(float weight[894][894],float neurone[894]){
         s += weight[i][j]*neurone[i];
       }
       neurone[j] = sigmoid(s+weight[j+1][j]);
-      //printf("%f\n", neurone[j]);
     }
   
   for(int j = 842;j<894;j+=2)
@@ -217,14 +221,14 @@ char Reseau(float image[28][28], char c)
   Init_Reseau(image,target,neurone,weight,c);
 
   RunReseau(weight, neurone);
-  BackProp(weight, neurone, target);
+  //BackProp(weight, neurone, target);
 
-  save(weight);
+  //save(weight);
   char res = binArray_to_letter(neurone);
 
-  printf("res :%c expect : %c\n",res, c);
+  //printf("res :%c expect : %c\n",res, c);
   //fflush(stdout);
-  Print_return_Array(neurone);
+  //Print_return_Array(neurone);
 
   return res;
 }

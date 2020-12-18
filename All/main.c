@@ -5,10 +5,10 @@
 #include <SDL2/SDL_ttf.h>
 #include <stdlib.h>
 #include <err.h>
-#include "PreTreatment.h"
-#include "utility_SDL.h"
-#include "Segmentation.h"
-#include "Call_Reseau.h"
+#include "Headers/PreTreatment.h"
+#include "Headers/utility_SDL.h"
+#include "Headers/Segmentation.h"
+#include "Headers/Call_Reseau.h"
 
 #define true 1
 #define false 0
@@ -51,12 +51,15 @@ int w;
 int is_auto;
 int binarized = false;
 
+
+//Open an image and display in the window
 void open_image(GtkWidget *image, char* filename)
 {
 	GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file_at_scale(filename, 800, 650, FALSE,&error);
 	gtk_image_set_from_pixbuf(GTK_IMAGE(image), pixbuf);
 }
 
+//Open a window to choose the file to open
 void open_dialog(GtkWidget *window)
 {
 	GtkWidget *dialog;
@@ -79,21 +82,7 @@ void open_dialog(GtkWidget *window)
     gtk_widget_destroy(dialog);
 }
 
-void test(Uint8 binaryArray[h][w])
-{
-	InitFile(h, w, binaryArray, surface);
-	display_Array(h, w, binaryArray, surface);
-	IMG_SavePNG(surface, "Save/res.png");
-	open_image(res, "Save/res.png");
-	for (int i = 0; i < 1; ++i)
-	{
-		printf("%d\n", i);
-		fflush(stdout);
-		search_segmented(h, w, binaryArray);
-	}
-	printf("done\n");
-}
-
+//Binarize image on click
 void binarize_image()
 {
 	if (binarized == false)
@@ -104,11 +93,21 @@ void binarize_image()
 	    display_Array(h, w, binaryArray, surface);
 	    IMG_SavePNG(surface, "Save/res.png");
 	    open_image(res, "Save/res.png");
-
-	    test(binaryArray);
 	}
 }
 
+//Segmente image on click
+void segmente_image()
+{
+	Uint8 binaryArray[h][w];
+	is_auto = Binarize(h, w, binaryArray, surface, is_auto);
+	InitFile(h, w, binaryArray, surface);
+	display_Array(h, w, binaryArray, surface);
+	IMG_SavePNG(surface, "Save/res.png");
+	open_image(res, "Save/res.png");
+}
+
+//Revert the binarization of the image 0<->255
 void revert_image()
 {
 	Uint8 binaryArray[h][w];
@@ -136,6 +135,9 @@ void revert_image()
     open_image(res, "Save/res.png");
 }
 
+
+//Use a matrix of Convolution on the image loaded. The matrix
+//Depend on the button
 void edit_image(int matrix[3][3])
 {
 	if (binarized == false)
@@ -149,6 +151,7 @@ void edit_image(int matrix[3][3])
     binarized = false;
 }
 
+//Reload the image from the last save
 void reload_image()
 {
 	open_image(image, filename);
@@ -160,6 +163,7 @@ void reload_image()
 	is_auto = 0;
 }
 
+//When clicked on write text use the number written
 void button_clicked(GtkWidget *useless, gpointer data)
 {
 	int sauto = (int) strtol(gtk_entry_get_text(GTK_ENTRY(data)), (char **) NULL, 10);
@@ -178,6 +182,8 @@ void button_clicked(GtkWidget *useless, gpointer data)
 	useless = useless;
 }
 
+
+//When clicked on manual permit to choose the biai of the binarization
 void manual_image()
 {
 	GtkWidget *Manual_window;
@@ -210,6 +216,8 @@ void manual_image()
 
 }
 
+
+//Save the image at the state we are in the GtkWindow to keep the changes
 void save_image()
 {
 	int i = 0;
@@ -219,6 +227,18 @@ void save_image()
 	IMG_SavePNG(surface, filename);
 }
 
+void reseau_image()
+{
+	Uint8 binaryArray[h][w];
+	is_auto = Binarize(h, w, binaryArray, surface, is_auto);
+	InitFile(h, w, binaryArray, surface);
+	display_Array(h, w, binaryArray, surface);
+	IMG_SavePNG(surface, "Save/res.png");
+	open_image(res, "Save/res.png");
+	search_segmented(h, w, binaryArray);
+}
+
+//Init the window and all the button and connection 
 void init_window()
 {
 	GtkWidget *Open_file;
@@ -231,6 +251,8 @@ void init_window()
 	GtkWidget *Manual;
 	GtkWidget *Save;
 	GtkWidget *Quit;
+	GtkWidget *Segmentation;
+	GtkWidget *Reseau;
 	is_auto = 0;
 
 	window = GTK_WIDGET(gtk_builder_get_object(builder, "Main_window"));
@@ -268,14 +290,24 @@ void init_window()
 
 	Save = GTK_WIDGET(gtk_builder_get_object(builder, "Save"));
 	g_signal_connect(GTK_MENU_ITEM(Save), "activate", G_CALLBACK(save_image), NULL);
+
+	Segmentation = GTK_WIDGET(gtk_builder_get_object(builder, "Segmentation"));
+	g_signal_connect(GTK_MENU_ITEM(Segmentation), "activate", G_CALLBACK(segmente_image), NULL);
+
+	Reseau = GTK_WIDGET(gtk_builder_get_object(builder, "Reseau"));
+	g_signal_connect(GTK_MENU_ITEM(Reseau), "activate", G_CALLBACK(reseau_image), NULL);
 }
 
+
+//Free the SDL
 void freeS()
 {
 	SDL_FreeSurface(surface);
 	SDL_Quit();
 }
 
+
+//Execut all
 int main(int argc, char *argv[])
 {
 	//ALL INIT OF GTK AND SDL

@@ -2,7 +2,7 @@
 #include <SDL2/SDL.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "utility_SDL.h"
+#include "Headers/utility_SDL.h"
 #include <math.h>
 
 float nb_pixels;
