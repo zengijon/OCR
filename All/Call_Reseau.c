@@ -60,9 +60,10 @@ char white_to_vector(int h, int w, int i, int j, Uint8 binaryArray[h][w], char c
 void search_segmented(int h, int w, Uint8 binaryArray[h][w])
 {
   int k =0;
-  //char target[26] = {'a','z','e','r','t','y','u','i','o','p','q','s','d','f','g','h','j','k','l','m','w','x','c','v','b','n'} ;
-  char target[26] = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
+  char target[26] = {'a','z','e','r','t','y','u','i','o','p','q','s','d','f','g','h','j','k','l','m','w','x','c','v','b','n'} ;
+  //char target[26] = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
   //memset(target, 'r');
+  //char target[5] = {'s', 'a', 'l', 'u', 't'};
 
   Uint8 binary[h][w];
   memcpy(binary, binaryArray, sizeof(Uint8) * h * w);
