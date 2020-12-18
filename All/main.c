@@ -85,12 +85,13 @@ void test(Uint8 binaryArray[h][w])
 	display_Array(h, w, binaryArray, surface);
 	IMG_SavePNG(surface, "Save/res.png");
 	open_image(res, "Save/res.png");
-	for (int i = 0; i < 1; ++i)
+	for (int i = 0; i < 100; ++i)
 	{
 		printf("%d\n", i);
+		fflush(stdout);
 		search_segmented(h, w, binaryArray);
 	}
-	printf("testounet\n");
+	printf("done\n");
 }
 
 void binarize_image()
@@ -164,7 +165,7 @@ void button_clicked(GtkWidget *useless, gpointer data)
 	int sauto = (int) strtol(gtk_entry_get_text(GTK_ENTRY(data)), (char **) NULL, 10);
 	if (sauto > 255)
 		sauto = 0;
-	g_print("%d\n", sauto);
+	//g_print("%d\n", sauto);
 	gtk_editable_select_region(GTK_EDITABLE(data), 0, -1);
 	gtk_editable_copy_clipboard(GTK_EDITABLE(data));
 	if (binarized)
@@ -209,6 +210,15 @@ void manual_image()
 
 }
 
+void save_image()
+{
+	int i = 0;
+	for (; (*(filename + i) != '\0' && *(filename + i) != '.'); ++i);
+	filename[i] = 0;
+	asprintf(&filename, "%s%s", filename, "_save.png");
+	IMG_SavePNG(surface, filename);
+}
+
 void init_window()
 {
 	GtkWidget *Open_file;
@@ -219,10 +229,15 @@ void init_window()
 	GtkWidget *Smouth;
 	GtkWidget *Reload;
 	GtkWidget *Manual;
+	GtkWidget *Save;
+	GtkWidget *Quit;
 	is_auto = 0;
 
 	window = GTK_WIDGET(gtk_builder_get_object(builder, "Main_window"));
 	g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
+
+	Quit = GTK_WIDGET(gtk_builder_get_object(builder, "Quit"));
+	g_signal_connect(Quit, "activate", G_CALLBACK(gtk_main_quit), NULL);
 
 	Open_file = GTK_WIDGET(gtk_builder_get_object(builder, "Open"));
 	g_signal_connect(GTK_MENU_ITEM(Open_file), "activate", G_CALLBACK(open_dialog), NULL);
@@ -250,8 +265,9 @@ void init_window()
 
 	Manual = GTK_WIDGET(gtk_builder_get_object(builder, "Manual"));
 	g_signal_connect(GTK_MENU_ITEM(Manual), "activate", G_CALLBACK(manual_image), NULL);
-	//g_signal_connect(GTK_MENU_ITEM(Manual), "activate", G_CALLBACK(binarize_image), NULL);
 
+	Save = GTK_WIDGET(gtk_builder_get_object(builder, "Save"));
+	g_signal_connect(GTK_MENU_ITEM(Save), "activate", G_CALLBACK(save_image), NULL);
 }
 
 void freeS()
@@ -280,7 +296,5 @@ int main(int argc, char *argv[])
 	gtk_main();
 
 	freeS();
-
-	printf("%s\n", "test");
 	return 0;
 }

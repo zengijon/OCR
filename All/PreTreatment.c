@@ -163,7 +163,6 @@ int Binarize(int h, int w, Uint8 binaryArray[h][w], SDL_Surface *image, int s)
 	    binaryArray[i][j] = 255;
 	}
     }
-  printf("%d\n", seuil);
   return seuil;
 }
 

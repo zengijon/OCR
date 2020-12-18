@@ -25,5 +25,5 @@ save_clean:
 	rm -f *.o
 	rm -f main
 	rm -f *~
-	rm -f save.txt	
+	rm -f Save/save.txt	
 

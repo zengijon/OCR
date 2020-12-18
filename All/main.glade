@@ -33,10 +33,20 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
+                      <object class="GtkMenuItem" id="Save">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Save</property>
+                        <property name="use_underline">True</property>
+                        <accelerator key="s" signal="activate" modifiers="GDK_CONTROL_MASK"/>
+                      </object>
+                    </child>
+                    <child>
                       <object class="GtkMenuItem" id="Open">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Open</property>
+                        <accelerator key="o" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                       </object>
                     </child>
                     <child>
@@ -54,12 +64,11 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkImageMenuItem">
-                        <property name="label">gtk-quit</property>
+                      <object class="GtkMenuItem" id="Quit">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Quit</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
                       </object>
                     </child>
                   </object>
@@ -100,6 +109,7 @@
                                 <property name="can_focus">False</property>
                                 <property name="label" translatable="yes">Manual Threshold</property>
                                 <property name="use_underline">True</property>
+                                <accelerator key="m" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                               </object>
                             </child>
                           </object>
@@ -149,29 +159,6 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Smouth</property>
                         <property name="use_underline">True</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkMenuItem">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Aid_e</property>
-                <property name="use_underline">True</property>
-                <child type="submenu">
-                  <object class="GtkMenu">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <child>
-                      <object class="GtkImageMenuItem">
-                        <property name="label">gtk-about</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
                       </object>
                     </child>
                   </object>

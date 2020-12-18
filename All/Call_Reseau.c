@@ -6,13 +6,13 @@ int number = 0;
 
 char scale_down_to_28(int h, int w,Uint8 binaryArray[h][w],char c)
 {
-  double ratio_h = ((double) h) / 28;
-  double ratio_w = ((double) w) / 28;
-  double binaryArray28[28][28];
+  float ratio_h = ((float) h) / 28;
+  float ratio_w = ((float) w) / 28;
+  float binaryArray28[28][28];
   for(int i = 0; i < 28; i++)
       for (int j = 0;  j < 28; j++)
         {
-          double tmp = (double)binaryArray[(int)(i*ratio_h+0.5)][(int)(j*ratio_w+0.5)];
+          float tmp = (float)binaryArray[(int)(i*ratio_h+0.5)][(int)(j*ratio_w+0.5)];
           if (tmp == 0)
           {
             binaryArray28[i][j] = 0;
@@ -60,20 +60,33 @@ char white_to_vector(int h, int w, int i, int j, Uint8 binaryArray[h][w], char c
 void search_segmented(int h, int w, Uint8 binaryArray[h][w])
 {
   int k =0;
-  char target[26] = {'a','z','e','r','t','y','u','i','o','p','q','s','d','f','g','h','j','k','l','m','w','x','c','v','b','n'} ;
-for (int i = 0; i < h; ++i)
+  //char target[26] = {'a','z','e','r','t','y','u','i','o','p','q','s','d','f','g','h','j','k','l','m','w','x','c','v','b','n'} ;
+  char target[26] = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
+  //memset(target, 'r');
+
+  Uint8 binary[h][w];
+  memcpy(binary, binaryArray, sizeof(Uint8) * h * w);
+
+  FILE* text_res = fopen("resultat.txt", "w+");
+
+  for (int i = 0; i < h; ++i)
   {
     for(int j = 0;j < w; ++j)
       { 
         //printf("ifstart\n");
-        if (binaryArray[i][j] == 0 || binaryArray[i][j] == 255)
+        if (binary[i][j] == 0 || binary[i][j] == 255)
         {
           number++;
           //printf("Segmented : %d\n", number);
-          white_to_vector(h, w,i,j, binaryArray, target[k++%26]);
+          char c = white_to_vector(h, w,i,j, binary, target[k++%26]);
+          fputc((int) c, text_res);
         }
         //printf("forj\n");
       }
       //printf("%d\n", i);
     }
+    printf("Je close\n");
+
+    fclose(text_res);
+    //printf("ok\n");
 }
