@@ -85,7 +85,7 @@ void test(Uint8 binaryArray[h][w])
 	display_Array(h, w, binaryArray, surface);
 	IMG_SavePNG(surface, "Save/res.png");
 	open_image(res, "Save/res.png");
-	for (int i = 0; i < 100; ++i)
+	for (int i = 0; i < 1; ++i)
 	{
 		printf("%d\n", i);
 		fflush(stdout);
