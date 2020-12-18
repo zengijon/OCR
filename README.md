@@ -1,14 +1,27 @@
 # OCR
 
-OCR is a fonction wich can translate a photo of a text in a .txt format
+OCR is a fonction wich can translate a photo of a text in a .txt format using neural network.
 
-## Installation
+Made for the S3 Projet in EPITA
 
-make in shell
+## Installation OCR
 
-## Usage
+How to compile OCR:
+	cd All/
+	make
+How to execute program OCR:
+	./main
 
-In the shell:
-	./main "path/of/the/image.extension"
-Extensions can be: jpeg, bmp, jpg, png.
+## Installation XOR
+
+How to compile XOR:
+	cd XOR/
+	make
+How to execute program XOR:
+	./main
+
+## Information
+
+The neural network part is still a proof of concept.
+Use "make save_clean" to remove a neural network save.
 

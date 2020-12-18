@@ -4,6 +4,7 @@
 
 int number = 0;
 
+//Change the form of the char to be always the same (28x28)
 char scale_down_to_28(int h, int w,Uint8 binaryArray[h][w],char c)
 {
   float ratio_h = ((float) h) / 28;
@@ -25,13 +26,12 @@ char scale_down_to_28(int h, int w,Uint8 binaryArray[h][w],char c)
             binaryArray28[i][j] = tmp/255;
           
         }
-  //printf("Scale_Down %d\n", number);
   return Reseau(binaryArray28, c);
 }
 
+//Met les charactere en gris afin de ne pas les reprendre en compte
 char white_to_vector(int h, int w, int i, int j, Uint8 binaryArray[h][w], char c)
 {
-  //printf("White Vector begin %d\n", number);
   int _h =0;
   int _w =0;
   for (; _h + i < h && (binaryArray[_h+i][j] == 0 || binaryArray[_h+i][j] == 255) ; _h++);
@@ -45,26 +45,15 @@ char white_to_vector(int h, int w, int i, int j, Uint8 binaryArray[h][w], char c
         binaryArray[i+y][j+k] = 129;
       }
 
-  //printf("White Vector end %d\n", number);
 
   return scale_down_to_28(_h, _w,NewArray, c);
-  /*for (int i = 0; i < count; ++i)
-  {
-    for (int i = 0; i < count; ++i)
-    {
-
-    }
-  }*/
 }
 
+//FOnction principale qui cherche les caractères
 void search_segmented(int h, int w, Uint8 binaryArray[h][w])
 {
   int k =0;
   char target[26] = {'a','z','e','r','t','y','u','i','o','p','q','s','d','f','g','h','j','k','l','m','w','x','c','v','b','n'} ;
-  //char target[26] = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
-  //memset(target, 'r');
-  //char target[1] = {'r'};
-  //char target[5] = {'s', 'a', 'l', 'u', 't'};
 
   Uint8 binary[h][w];
   memcpy(binary, binaryArray, sizeof(Uint8) * h * w);
@@ -75,20 +64,14 @@ void search_segmented(int h, int w, Uint8 binaryArray[h][w])
   {
     for(int j = 0;j < w; ++j)
       { 
-        //printf("ifstart\n");
         if (binary[i][j] == 0 || binary[i][j] == 255)
         {
           number++;
-          //printf("Segmented : %d\n", number);
           char c = white_to_vector(h, w,i,j, binary, target[k++%26]);
           fputc((int) c, text_res);
         }
-        //printf("forj\n");
       }
-      //printf("%d\n", i);
     }
-    printf("Je close\n");
 
     fclose(text_res);
-    //printf("ok\n");
 }

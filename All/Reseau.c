@@ -66,6 +66,9 @@ fclose(sav);
 void load(float weight[894][894])
 {
   FILE* sav = fopen("Save/save.txt", "r");
+
+  //Si le fichier n'existe pas remplir les poids
+  //Aléatoirement
   if (sav == NULL)
     {
       for (int i =0; i < 894;++i)
@@ -75,7 +78,9 @@ void load(float weight[894][894])
             }
       return;
     }
-  /*for (int j = 784; j < 842; j+=2)
+
+  //S'il existe chargé les poids grâce à la save
+  for (int j = 784; j < 842; j+=2)
   {
     char point[20];
     fgets(point, 15, sav);
@@ -102,7 +107,8 @@ void load(float weight[894][894])
         float res = atof(point);
         weight[i][j] = res;
       }
-  }*/
+  }
+
   fclose(sav);
 }
 
@@ -123,6 +129,8 @@ void Init_Reseau(float image[28][28],float target[26],float neurone[894],float w
   for(int i = 784;i<894;++i)
     neurone[i] = 1;
 
+  //Load mis en commentaire car non-fonctionnel
+  //Remplacé ici par le double for qui rempli les poids aléatoirement
   //load(weight);
     for (int i =0; i < 894;++i)
      for (int j = 0;j< 894;++j)
@@ -131,7 +139,7 @@ void Init_Reseau(float image[28][28],float target[26],float neurone[894],float w
         }
 }
 
-//
+//Change les neurones par rapport au poids 
 void RunReseau(float weight[894][894],float neurone[894]){
 
   
@@ -154,19 +162,17 @@ void RunReseau(float weight[894][894],float neurone[894]){
     }
 }
 
-
+//BackProp of the reseau with the OutputError
 void BackProp(float weight[894][894],float neurone[894],float target[26])
 {
   float d;
   for(int i = 842; i<894; i+=2)
     {
-      //printf("neurone : %f target : %f\n", neurone[i], target[(i-842)/2]);
       d = OutputError(neurone[i],target[(i-842)/2]);
       for(int j = 784; j<842;j+=2)
 	       weight[j][i] += WeightUpdate(d,neurone[i]);
       
       weight[i+1][i] += WeightUpdate(d,neurone[i]);
-      //printf("d start : %f\n", d);
     }
 
   for(int i = 784; i<842;i+=2)
@@ -186,9 +192,9 @@ void BackProp(float weight[894][894],float neurone[894],float target[26])
 
       weight[i+1][i] +=  WeightUpdate(d,neurone[i+1]);
     }    
-    //printf("d end : %f\n", d);
 }
 
+//Found what the reseau thing the char is 
 char binArray_to_letter(float neurone[894])
 {
   char alphabet[26] = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
@@ -205,14 +211,7 @@ char binArray_to_letter(float neurone[894])
   return alphabet[(max_index-842)/2];
 }
 
-void Print_return_Array(float neurone[894])
-{
-  printf("[");
-  for (int i = 842; i<894; i+=2)
-    printf("%f, ",neurone[i]);
-  printf("]\n");
-}
-
+//Launch all the fonctiuns of the reseau
 char Reseau(float image[28][28], char c)
 {
   float neurone[894];
@@ -221,14 +220,11 @@ char Reseau(float image[28][28], char c)
   Init_Reseau(image,target,neurone,weight,c);
 
   RunReseau(weight, neurone);
-  //BackProp(weight, neurone, target);
 
+  //La BackProp et le save sont mis en commentaire car non fonctionnel
+  //BackProp(weight, neurone, target);
   //save(weight);
   char res = binArray_to_letter(neurone);
-
-  //printf("res :%c expect : %c\n",res, c);
-  //fflush(stdout);
-  //Print_return_Array(neurone);
 
   return res;
 }

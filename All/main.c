@@ -227,6 +227,7 @@ void save_image()
 	IMG_SavePNG(surface, filename);
 }
 
+//Lance le réseau de neurone
 void reseau_image()
 {
 	Uint8 binaryArray[h][w];
